@@ -1,15 +1,25 @@
-name: Debug Workflow
-
-on: push
-
+name: Manual Trigger Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment for deployment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+          - development
+      deploy_version:
+        description: 'Version to deploy'
+        required: true
+        default: 'v1.0.0'
+        type: string
 jobs:
-  debug-job:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Enable Debug Logging
+      - name: Deploy Application
         run: |
-          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
-          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
-
-      - name: Test Debug Output
-        run: echo "This is a debug test step"
+          echo "Deploying to ${{ inputs.environment }} environment, version: ${{ inputs.deploy_version }}"
