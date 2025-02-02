@@ -1,25 +1,25 @@
-name: Manual Trigger Workflow
+name: Manual Trigger Workflow with Environment Variable
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Select the environment for deployment'
+        description: 'Environment to deploy'
         required: true
         default: 'production'
-        type: choice
-        options:
-          - production
-          - staging
-          - development
-      deploy_version:
-        description: 'Version to deploy'
-        required: true
-        default: 'v1.0.0'
         type: string
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Application
+      - name: Deploy to production
+        if: ${{ inputs.environment == 'production' }}
         run: |
-          echo "Deploying to ${{ inputs.environment }} environment, version: ${{ inputs.deploy_version }}"
+          echo "Deploying to production environment..."
+      - name: Deploy to staging
+        if: ${{ inputs.environment == 'staging' }}
+        run: |
+          echo "Deploying to staging environment..."
+      - name: Deploy to development
+        if: ${{ inputs.environment == 'development' }}
+        run: |
+          echo "Deploying to development environment..."
